@@ -1,0 +1,14 @@
+#include <iostream>
+using namespace std;
+
+	struct Producto {
+		Producto* siguiente;
+		
+		string nombre[31];
+	};
+
+int main(int argc, char *argv[]) {
+	
+	return 0;
+}
+
