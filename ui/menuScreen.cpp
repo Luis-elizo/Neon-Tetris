@@ -1,5 +1,5 @@
-#include "MenuScreen.h"
-#include "Colors.h"
+#include "menuScreen.h"
+#include "colors.h"
 #include <string>
 
 MenuScreen::MenuScreen() {

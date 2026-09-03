@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include<iostream>
-#include "MenuScreen.h"
+#include "ui/menuScreen.h"
 
 // Estados posibles del juego.
 enum class EstadoJuego {
