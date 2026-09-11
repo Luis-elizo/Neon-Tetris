@@ -13,7 +13,6 @@ private:
 public:
     PauseScreen();
 
-    // Devuelve 1 si presiona Continuar, 2 si presiona Menu, 0 si no pasa nada
     int Update();
     void Draw();
 };

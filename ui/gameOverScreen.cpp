@@ -22,7 +22,6 @@ int GameOverScreen::Update() {
 }
 
 void GameOverScreen::Draw(int puntajeFinal) {
-    // Fondo oscuro
     DrawRectangle(0, 0, 1000, 900, { 0, 0, 0, 230 });
 
     std::string titulo = "GAME OVER";
@@ -33,13 +32,11 @@ void GameOverScreen::Draw(int puntajeFinal) {
     int anchoPuntaje = MeasureText(puntaje.c_str(), 40);
     DrawText(puntaje.c_str(), (1000 - anchoPuntaje) / 2, 300, 40, RAYWHITE);
 
-    // Dibujar boton Replay
     Color colorBordeRep = replayResaltado ? NeonColors::ROSA : NeonColors::CYAN;
     DrawRectangleRec(botonReplay, NeonColors::FONDO);
     DrawRectangleLinesEx(botonReplay, 3, colorBordeRep);
     DrawText("Ver Replay", botonReplay.x + 35, botonReplay.y + 16, 24, colorBordeRep);
 
-    // Dibujar boton Menu
     Color colorBordeMenu = menuResaltado ? NeonColors::ROSA : NeonColors::CYAN;
     DrawRectangleRec(botonMenu, NeonColors::FONDO);
     DrawRectangleLinesEx(botonMenu, 3, colorBordeMenu);

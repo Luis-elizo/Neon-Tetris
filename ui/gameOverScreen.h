@@ -13,7 +13,6 @@ private:
 public:
     GameOverScreen();
 
-    // Devuelve 1 si presiona Menu, 2 si presiona Replay, 0 si nada
     int Update();
     void Draw(int puntajeFinal);
 };
