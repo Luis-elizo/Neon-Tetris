@@ -15,7 +15,7 @@ private:
 
 public:
     GameScreen();
-    void Draw(const Tablero& tablero, const Pieza& piezaActual);
+    void Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje);
 };
 
 #endif

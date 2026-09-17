@@ -1,5 +1,6 @@
 #include "gameScreen.h"
 #include "colors.h"
+#include <string>
 
 GameScreen::GameScreen() {
     cellSize = 35;       
@@ -10,7 +11,7 @@ GameScreen::GameScreen() {
     offsetY = (900 - (boardHeight * cellSize)) / 2;
 }
 
-void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual) {
+void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje) {
     ClearBackground(NeonColors::FONDO);
 
     DrawRectangleLinesEx({ (float)offsetX - 5, (float)offsetY - 5, (float)(boardWidth * cellSize) + 10, (float)(boardHeight * cellSize) + 10 }, 5, NeonColors::CYAN);
@@ -55,5 +56,7 @@ void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual) {
     DrawText("PUNTAJE", nextX + 25, scoreY, 30, NeonColors::CYAN);
     DrawRectangleLinesEx({ (float)nextX, (float)scoreY + 40, 180, 60 }, 3, NeonColors::CYAN);
     
-    DrawText("0", nextX + 20, scoreY + 50, 40, NeonColors::BLANCO_SUAVE);
+    // Draw real score
+    std::string scoreStr = std::to_string(puntaje);
+    DrawText(scoreStr.c_str(), nextX + 20, scoreY + 50, 40, NeonColors::BLANCO_SUAVE);
 }

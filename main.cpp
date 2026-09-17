@@ -30,7 +30,7 @@ int main() {
     Tablero tablero;
     Pieza piezaActual(static_cast<TipoPieza>(GetRandomValue(0, 6)));
     
-    int puntajeTemporal = 1500;
+    int puntaje = 0;
     
     float tiempoCaida = 0.0f;
     float velocidadCaida = 0.5f;
@@ -76,7 +76,13 @@ int main() {
                 if (tablero.hayColision(piezaActual)) {
                     piezaActual.mover(-1, 0); 
                     tablero.fijarPieza(piezaActual);
-                    // Por ahora solo apilamos sin destruir ni dar puntos
+                    
+                    int lineasLimpiadas = tablero.limpiarLineas();
+                    if (lineasLimpiadas == 1) puntaje += 100;
+                    else if (lineasLimpiadas == 2) puntaje += 300;
+                    else if (lineasLimpiadas == 3) puntaje += 500;
+                    else if (lineasLimpiadas >= 4) puntaje += 800;
+                    
                     piezaActual = Pieza(static_cast<TipoPieza>(GetRandomValue(0, 6)));
                     
                     // Si al nacer ya hay colision, es Game Over
@@ -99,6 +105,9 @@ int main() {
             int accion = pantallaGameOver.Update();
             if (accion == 1) {
                 estadoActual = EstadoJuego::MENU;
+                // Reset juego
+                tablero = Tablero();
+                puntaje = 0;
             } else if (accion == 2) {
                 estadoActual = EstadoJuego::REPLAY;
             }
@@ -106,6 +115,8 @@ int main() {
         else if (estadoActual == EstadoJuego::REPLAY) {
             if (IsKeyPressed(KEY_M)) {
                 estadoActual = EstadoJuego::MENU;
+                tablero = Tablero();
+                puntaje = 0;
             }
         }
         
@@ -115,15 +126,15 @@ int main() {
             menu.Draw();
         } 
         else if (estadoActual == EstadoJuego::JUEGO) {
-            pantallaJuego.Draw(tablero, piezaActual);
+            pantallaJuego.Draw(tablero, piezaActual, puntaje);
         }
         else if (estadoActual == EstadoJuego::PAUSA) {
-            pantallaJuego.Draw(tablero, piezaActual);
+            pantallaJuego.Draw(tablero, piezaActual, puntaje);
             pantallaPausa.Draw();
         }
         else if (estadoActual == EstadoJuego::GAME_OVER) {
             ClearBackground(BLACK);
-            pantallaGameOver.Draw(puntajeTemporal);
+            pantallaGameOver.Draw(puntaje);
         }
         else if (estadoActual == EstadoJuego::REPLAY) {
             ClearBackground(DARKGRAY);
