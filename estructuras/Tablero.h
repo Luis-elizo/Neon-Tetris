@@ -7,14 +7,20 @@ struct NodoCelda {
     int color;
     NodoCelda* siguiente;
     
-    NodoCelda(int c = 0) : color(c), siguiente(nullptr) {}
+    NodoCelda(int c = 0) {
+        color = c;
+        siguiente = nullptr;
+    }
 };
 
 struct NodoFila {
     NodoCelda* primerCelda;
     NodoFila* siguiente;
     
-    NodoFila() : primerCelda(nullptr), siguiente(nullptr) {}
+    NodoFila() {
+        primerCelda = nullptr;
+        siguiente = nullptr;
+    }
 };
 
 class Tablero {

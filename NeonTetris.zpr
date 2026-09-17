@@ -39,6 +39,10 @@ open=true
 path=estructuras\Tablero.cpp
 cursor=1:0
 open=false
+[source]
+path=estructuras\Cola.cpp
+cursor=1:0
+open=false
 [header]
 path=ui\colors.h
 cursor=15:0
@@ -59,6 +63,10 @@ path=ui\gameScreen.h
 cursor=1:0
 [header]
 path=estructuras\Tablero.h
+cursor=1:0
+open=false
+[header]
+path=estructuras\Cola.h
 cursor=1:0
 open=false
 [config]
