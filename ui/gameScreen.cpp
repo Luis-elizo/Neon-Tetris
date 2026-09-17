@@ -10,7 +10,7 @@ GameScreen::GameScreen() {
     offsetY = (900 - (boardHeight * cellSize)) / 2;
 }
 
-void GameScreen::Draw() {
+void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual) {
     ClearBackground(NeonColors::FONDO);
 
     DrawRectangleLinesEx({ (float)offsetX - 5, (float)offsetY - 5, (float)(boardWidth * cellSize) + 10, (float)(boardHeight * cellSize) + 10 }, 5, NeonColors::CYAN);
@@ -18,6 +18,26 @@ void GameScreen::Draw() {
     for (int i = 0; i < boardWidth; i++) {
         for (int j = 0; j < boardHeight; j++) {
             DrawRectangleLines(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize, {50, 50, 60, 255});
+        }
+    }
+
+    for (int fila = 0; fila < boardHeight; ++fila) {
+        for (int col = 0; col < boardWidth; ++col) {
+            int colorId = tablero.getCelda(fila, col);
+            if (colorId > 0) {
+                Color c = NeonColors::GetPieceColor(colorId);
+                DrawRectangle(offsetX + col * cellSize, offsetY + fila * cellSize, cellSize, cellSize, c);
+                DrawRectangleLines(offsetX + col * cellSize, offsetY + fila * cellSize, cellSize, cellSize, {255, 255, 255, 50});
+            }
+        }
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        Posicion pos = piezaActual.getPosicionBloque(i);
+        if (pos.fila >= 0 && pos.fila < boardHeight && pos.col >= 0 && pos.col < boardWidth) {
+            Color c = NeonColors::GetPieceColor(piezaActual.getColorId());
+            DrawRectangle(offsetX + pos.col * cellSize, offsetY + pos.fila * cellSize, cellSize, cellSize, c);
+            DrawRectangleLines(offsetX + pos.col * cellSize, offsetY + pos.fila * cellSize, cellSize, cellSize, {255, 255, 255, 50});
         }
     }
 

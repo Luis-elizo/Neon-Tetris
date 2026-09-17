@@ -4,6 +4,8 @@
 #include "ui/pauseScreen.h"
 #include "ui/gameOverScreen.h"
 #include "ui/gameScreen.h"
+#include "estructuras/Tablero.h"
+#include "logica/Pieza.h"
 
 enum class EstadoJuego {
     MENU,
@@ -25,7 +27,13 @@ int main() {
     GameOverScreen pantallaGameOver;
     GameScreen pantallaJuego;
     
+    Tablero tablero;
+    Pieza piezaActual(static_cast<TipoPieza>(GetRandomValue(0, 6)));
+    
     int puntajeTemporal = 1500;
+    
+    float tiempoCaida = 0.0f;
+    float velocidadCaida = 0.5f;
     
     while (!WindowShouldClose()) {
         
@@ -40,6 +48,43 @@ int main() {
             }
             if (IsKeyPressed(KEY_G)) {
                 estadoActual = EstadoJuego::GAME_OVER;
+            }
+            
+            // Logica de Caida y Movimiento
+            tiempoCaida += GetFrameTime();
+            
+            if (IsKeyPressed(KEY_LEFT)) {
+                piezaActual.mover(0, -1);
+                if (tablero.hayColision(piezaActual)) piezaActual.mover(0, 1);
+            }
+            if (IsKeyPressed(KEY_RIGHT)) {
+                piezaActual.mover(0, 1);
+                if (tablero.hayColision(piezaActual)) piezaActual.mover(0, -1);
+            }
+            if (IsKeyPressed(KEY_UP)) {
+                piezaActual.rotar();
+                if (tablero.hayColision(piezaActual)) piezaActual.deshacerRotacion();
+            }
+            if (IsKeyDown(KEY_DOWN)) {
+                velocidadCaida = 0.05f; // Soft drop
+            } else {
+                velocidadCaida = 0.5f;  // Velocidad normal
+            }
+            
+            if (tiempoCaida >= velocidadCaida) {
+                piezaActual.mover(1, 0); 
+                if (tablero.hayColision(piezaActual)) {
+                    piezaActual.mover(-1, 0); 
+                    tablero.fijarPieza(piezaActual);
+                    // Por ahora solo apilamos sin destruir ni dar puntos
+                    piezaActual = Pieza(static_cast<TipoPieza>(GetRandomValue(0, 6)));
+                    
+                    // Si al nacer ya hay colision, es Game Over
+                    if (tablero.hayColision(piezaActual)) {
+                        estadoActual = EstadoJuego::GAME_OVER;
+                    }
+                }
+                tiempoCaida = 0.0f;
             }
         }
         else if (estadoActual == EstadoJuego::PAUSA) {
@@ -70,10 +115,10 @@ int main() {
             menu.Draw();
         } 
         else if (estadoActual == EstadoJuego::JUEGO) {
-            pantallaJuego.Draw();
+            pantallaJuego.Draw(tablero, piezaActual);
         }
         else if (estadoActual == EstadoJuego::PAUSA) {
-            pantallaJuego.Draw();
+            pantallaJuego.Draw(tablero, piezaActual);
             pantallaPausa.Draw();
         }
         else if (estadoActual == EstadoJuego::GAME_OVER) {

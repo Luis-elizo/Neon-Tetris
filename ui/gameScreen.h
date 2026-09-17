@@ -2,6 +2,8 @@
 #define GAME_SCREEN_H
 
 #include "raylib.h"
+#include "../estructuras/Tablero.h"
+#include "../logica/Pieza.h"
 
 class GameScreen {
 private:
@@ -13,7 +15,7 @@ private:
 
 public:
     GameScreen();
-    void Draw();
+    void Draw(const Tablero& tablero, const Pieza& piezaActual);
 };
 
 #endif

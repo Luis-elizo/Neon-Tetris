@@ -35,6 +35,10 @@ cursor=33:50
 path=logica\Pieza.cpp
 cursor=1:0
 open=true
+[source]
+path=estructuras\Tablero.cpp
+cursor=1:0
+open=false
 [header]
 path=ui\colors.h
 cursor=15:0
@@ -53,6 +57,10 @@ cursor=1:0
 [header]
 path=ui\gameScreen.h
 cursor=1:0
+[header]
+path=estructuras\Tablero.h
+cursor=1:0
+open=false
 [config]
 name=Debug
 toolchain=
