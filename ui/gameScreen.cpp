@@ -11,7 +11,7 @@ GameScreen::GameScreen() {
     offsetY = (900 - (boardHeight * cellSize)) / 2;
 }
 
-void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje, const Cola& colaSiguientes) {
+void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje, const Cola& colaSiguientes, const Pila& pilaHold) {
     ClearBackground(NeonColors::FONDO);
 
     DrawRectangleLinesEx({ (float)offsetX - 5, (float)offsetY - 5, (float)(boardWidth * cellSize) + 10, (float)(boardHeight * cellSize) + 10 }, 5, NeonColors::CYAN);
@@ -46,6 +46,18 @@ void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual, int punt
     int holdY = offsetY;
     DrawText("HOLD", holdX + 35, holdY - 40, 30, NeonColors::MORADO);
     DrawRectangleLinesEx({ (float)holdX, (float)holdY, 150, 150 }, 3, NeonColors::MORADO);
+
+    if (!pilaHold.estaVacia()) {
+        Pieza piezaHold(pilaHold.verCima());
+        for (int i = 0; i < 4; ++i) {
+            Posicion pos = piezaHold.getPosicionBloque(i);
+            Color c = NeonColors::GetPieceColor(piezaHold.getColorId());
+            int px = holdX + 40 + (pos.col - 4) * cellSize;
+            int py = holdY + 50 + pos.fila * cellSize;
+            DrawRectangle(px, py, cellSize, cellSize, c);
+            DrawRectangleLines(px, py, cellSize, cellSize, {255, 255, 255, 50});
+        }
+    }
 
     int nextX = offsetX + (boardWidth * cellSize) + 50;
     int nextY = offsetY;

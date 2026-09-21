@@ -7,6 +7,7 @@
 #include "estructuras/Tablero.h"
 #include "logica/Pieza.h"
 #include "estructuras/Cola.h"
+#include "estructuras/Pila.h"
 
 enum class EstadoJuego {
     MENU,
@@ -52,6 +53,9 @@ int main() {
     LlenarBolsa(colaSiguientes);
     Pieza piezaActual(colaSiguientes.desencolar());
     
+    Pila pilaHold;
+    bool yaIntercambio = false;
+    
     int puntaje = 0;
     
     float tiempoCaida = 0.0f;
@@ -93,11 +97,29 @@ int main() {
                 velocidadCaida = 0.5f;  // Velocidad normal
             }
             
+            if (IsKeyPressed(KEY_RIGHT_SHIFT) && !yaIntercambio) {
+                TipoPieza tipoActual = piezaActual.getTipo();
+                if (pilaHold.estaVacia()) {
+                    pilaHold.apilar(tipoActual);
+                    if (colaSiguientes.estaVacia()) {
+                        LlenarBolsa(colaSiguientes);
+                    }
+                    piezaActual = Pieza(colaSiguientes.desencolar());
+                } else {
+                    TipoPieza guardada = pilaHold.desapilar();
+                    pilaHold.apilar(tipoActual);
+                    piezaActual = Pieza(guardada);
+                }
+                yaIntercambio = true;
+                tiempoCaida = 0.0f; 
+            }
+            
             if (tiempoCaida >= velocidadCaida) {
                 piezaActual.mover(1, 0); 
                 if (tablero.hayColision(piezaActual)) {
                     piezaActual.mover(-1, 0); 
                     tablero.fijarPieza(piezaActual);
+                    yaIntercambio = false; 
                     
                     int lineasLimpiadas = tablero.limpiarLineas();
                     if (lineasLimpiadas == 1) puntaje += 100;
@@ -136,6 +158,8 @@ int main() {
                 while (!colaSiguientes.estaVacia()) colaSiguientes.desencolar();
                 LlenarBolsa(colaSiguientes);
                 piezaActual = Pieza(colaSiguientes.desencolar());
+                while (!pilaHold.estaVacia()) pilaHold.desapilar();
+                yaIntercambio = false;
             } else if (accion == 2) {
                 estadoActual = EstadoJuego::REPLAY;
             }
@@ -148,6 +172,8 @@ int main() {
                 while (!colaSiguientes.estaVacia()) colaSiguientes.desencolar();
                 LlenarBolsa(colaSiguientes);
                 piezaActual = Pieza(colaSiguientes.desencolar());
+                while (!pilaHold.estaVacia()) pilaHold.desapilar();
+                yaIntercambio = false;
             }
         }
         
@@ -157,10 +183,10 @@ int main() {
             menu.Draw();
         } 
         else if (estadoActual == EstadoJuego::JUEGO) {
-            pantallaJuego.Draw(tablero, piezaActual, puntaje, colaSiguientes);
+            pantallaJuego.Draw(tablero, piezaActual, puntaje, colaSiguientes, pilaHold);
         }
         else if (estadoActual == EstadoJuego::PAUSA) {
-            pantallaJuego.Draw(tablero, piezaActual, puntaje, colaSiguientes);
+            pantallaJuego.Draw(tablero, piezaActual, puntaje, colaSiguientes, pilaHold);
             pantallaPausa.Draw();
         }
         else if (estadoActual == EstadoJuego::GAME_OVER) {
