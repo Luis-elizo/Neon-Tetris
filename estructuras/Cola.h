@@ -26,6 +26,7 @@ public:
     void encolar(TipoPieza elemento);
     TipoPieza desencolar();
     TipoPieza verPrimero() const;
+    TipoPieza obtenerEn(int indice) const;
     bool estaVacia() const;
     int getTamano() const;
 };

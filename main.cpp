@@ -6,6 +6,7 @@
 #include "ui/gameScreen.h"
 #include "estructuras/Tablero.h"
 #include "logica/Pieza.h"
+#include "estructuras/Cola.h"
 
 enum class EstadoJuego {
     MENU,
@@ -14,6 +15,24 @@ enum class EstadoJuego {
     GAME_OVER,
     REPLAY
 };
+
+void LlenarBolsa(Cola& cola) {
+    TipoPieza bolsa[7] = { 
+        TipoPieza::I, TipoPieza::O, TipoPieza::T, TipoPieza::S, 
+        TipoPieza::Z, TipoPieza::J, TipoPieza::L 
+    };
+    
+    for (int i = 6; i > 0; --i) {
+        int j = GetRandomValue(0, i);
+        TipoPieza temp = bolsa[i];
+        bolsa[i] = bolsa[j];
+        bolsa[j] = temp;
+    }
+    
+    for (int i = 0; i < 7; ++i) {
+        cola.encolar(bolsa[i]);
+    }
+}
 
 int main() {
     InitWindow(1000, 900, "NeonTetris");
@@ -28,7 +47,10 @@ int main() {
     GameScreen pantallaJuego;
     
     Tablero tablero;
-    Pieza piezaActual(static_cast<TipoPieza>(GetRandomValue(0, 6)));
+    
+    Cola colaSiguientes;
+    LlenarBolsa(colaSiguientes);
+    Pieza piezaActual(colaSiguientes.desencolar());
     
     int puntaje = 0;
     
@@ -83,7 +105,10 @@ int main() {
                     else if (lineasLimpiadas == 3) puntaje += 500;
                     else if (lineasLimpiadas >= 4) puntaje += 800;
                     
-                    piezaActual = Pieza(static_cast<TipoPieza>(GetRandomValue(0, 6)));
+                    if (colaSiguientes.estaVacia()) {
+                        LlenarBolsa(colaSiguientes);
+                    }
+                    piezaActual = Pieza(colaSiguientes.desencolar());
                     
                     // Si al nacer ya hay colision, es Game Over
                     if (tablero.hayColision(piezaActual)) {
@@ -108,6 +133,9 @@ int main() {
                 // Reset juego
                 tablero = Tablero();
                 puntaje = 0;
+                while (!colaSiguientes.estaVacia()) colaSiguientes.desencolar();
+                LlenarBolsa(colaSiguientes);
+                piezaActual = Pieza(colaSiguientes.desencolar());
             } else if (accion == 2) {
                 estadoActual = EstadoJuego::REPLAY;
             }
@@ -117,6 +145,9 @@ int main() {
                 estadoActual = EstadoJuego::MENU;
                 tablero = Tablero();
                 puntaje = 0;
+                while (!colaSiguientes.estaVacia()) colaSiguientes.desencolar();
+                LlenarBolsa(colaSiguientes);
+                piezaActual = Pieza(colaSiguientes.desencolar());
             }
         }
         
@@ -126,10 +157,10 @@ int main() {
             menu.Draw();
         } 
         else if (estadoActual == EstadoJuego::JUEGO) {
-            pantallaJuego.Draw(tablero, piezaActual, puntaje);
+            pantallaJuego.Draw(tablero, piezaActual, puntaje, colaSiguientes);
         }
         else if (estadoActual == EstadoJuego::PAUSA) {
-            pantallaJuego.Draw(tablero, piezaActual, puntaje);
+            pantallaJuego.Draw(tablero, piezaActual, puntaje, colaSiguientes);
             pantallaPausa.Draw();
         }
         else if (estadoActual == EstadoJuego::GAME_OVER) {

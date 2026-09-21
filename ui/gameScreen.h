@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "../estructuras/Tablero.h"
 #include "../logica/Pieza.h"
+#include "../estructuras/Cola.h"
 
 class GameScreen {
 private:
@@ -15,7 +16,7 @@ private:
 
 public:
     GameScreen();
-    void Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje);
+    void Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje, const Cola& colaSiguientes);
 };
 
 #endif

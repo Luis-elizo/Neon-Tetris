@@ -47,6 +47,19 @@ TipoPieza Cola::verPrimero() const {
     return primero->dato;
 }
 
+TipoPieza Cola::obtenerEn(int indice) const {
+    NodoCola* aux = primero;
+    int contador = 0;
+    while (aux != nullptr && contador < indice) {
+        aux = aux->siguiente;
+        contador++;
+    }
+    if (aux != nullptr) {
+        return aux->dato;
+    }
+    return TipoPieza::I; 
+}
+
 bool Cola::estaVacia() const {
     return primero == nullptr;
 }

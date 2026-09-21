@@ -11,7 +11,7 @@ GameScreen::GameScreen() {
     offsetY = (900 - (boardHeight * cellSize)) / 2;
 }
 
-void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje) {
+void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje, const Cola& colaSiguientes) {
     ClearBackground(NeonColors::FONDO);
 
     DrawRectangleLinesEx({ (float)offsetX - 5, (float)offsetY - 5, (float)(boardWidth * cellSize) + 10, (float)(boardHeight * cellSize) + 10 }, 5, NeonColors::CYAN);
@@ -52,11 +52,25 @@ void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual, int punt
     DrawText("SIGUIENTES", nextX + 10, nextY - 40, 30, NeonColors::ROSA);
     DrawRectangleLinesEx({ (float)nextX, (float)nextY, 180, 400 }, 3, NeonColors::ROSA);
 
+    if (!colaSiguientes.estaVacia()) {
+        int maxSiguientes = colaSiguientes.getTamano() < 3 ? colaSiguientes.getTamano() : 3;
+        for (int k = 0; k < maxSiguientes; ++k) {
+            Pieza sigPieza(colaSiguientes.obtenerEn(k));
+            for (int i = 0; i < 4; ++i) {
+                Posicion pos = sigPieza.getPosicionBloque(i);
+                Color c = NeonColors::GetPieceColor(sigPieza.getColorId());
+                int px = nextX + 50 + (pos.col - 4) * cellSize;
+                int py = nextY + 60 + pos.fila * cellSize + (k * 110);
+                DrawRectangle(px, py, cellSize, cellSize, c);
+                DrawRectangleLines(px, py, cellSize, cellSize, {255, 255, 255, 50});
+            }
+        }
+    }
+
     int scoreY = nextY + 450;
     DrawText("PUNTAJE", nextX + 25, scoreY, 30, NeonColors::CYAN);
     DrawRectangleLinesEx({ (float)nextX, (float)scoreY + 40, 180, 60 }, 3, NeonColors::CYAN);
     
-    // Draw real score
     std::string scoreStr = std::to_string(puntaje);
     DrawText(scoreStr.c_str(), nextX + 20, scoreY + 50, 40, NeonColors::BLANCO_SUAVE);
 }
