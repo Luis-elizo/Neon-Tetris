@@ -86,3 +86,40 @@ void GameScreen::Draw(const Tablero& tablero, const Pieza& piezaActual, int punt
     std::string scoreStr = std::to_string(puntaje);
     DrawText(scoreStr.c_str(), nextX + 20, scoreY + 50, 40, NeonColors::BLANCO_SUAVE);
 }
+
+void GameScreen::DrawReplay(NodoHistorial* estadoReplay) {
+    ClearBackground(NeonColors::FONDO);
+
+    DrawRectangleLinesEx({ (float)offsetX - 5, (float)offsetY - 5, (float)(boardWidth * cellSize) + 10, (float)(boardHeight * cellSize) + 10 }, 5, NeonColors::CYAN);
+    
+    for (int i = 0; i < boardWidth; i++) {
+        for (int j = 0; j < boardHeight; j++) {
+            DrawRectangleLines(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize, {50, 50, 60, 255});
+        }
+    }
+
+    if (estadoReplay != nullptr) {
+        for (int fila = 0; fila < boardHeight; ++fila) {
+            for (int col = 0; col < boardWidth; ++col) {
+                int colorId = estadoReplay->estado[fila][col];
+                if (colorId > 0) {
+                    Color c = NeonColors::GetPieceColor(colorId);
+                    DrawRectangle(offsetX + col * cellSize, offsetY + fila * cellSize, cellSize, cellSize, c);
+                    DrawRectangleLines(offsetX + col * cellSize, offsetY + fila * cellSize, cellSize, cellSize, {255, 255, 255, 50});
+                }
+            }
+        }
+        
+        int nextX = offsetX + (boardWidth * cellSize) + 50;
+        int scoreY = offsetY + 450;
+        DrawText("PUNTAJE", nextX + 25, scoreY, 30, NeonColors::CYAN);
+        DrawRectangleLinesEx({ (float)nextX, (float)scoreY + 40, 180, 60 }, 3, NeonColors::CYAN);
+        
+        std::string scoreStr = std::to_string(estadoReplay->puntaje);
+        DrawText(scoreStr.c_str(), nextX + 20, scoreY + 50, 40, NeonColors::BLANCO_SUAVE);
+    }
+    
+    DrawText("MODO REPLAY", 30, 30, 40, NeonColors::ROSA);
+    DrawText("Usa flechas <- / -> para viajar en el tiempo", 30, 80, 20, NeonColors::BLANCO_SUAVE);
+    DrawText("Presiona 'M' para salir al Menu", 30, 110, 20, NeonColors::BLANCO_SUAVE);
+}

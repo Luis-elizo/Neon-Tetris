@@ -8,6 +8,7 @@
 #include "logica/Pieza.h"
 #include "estructuras/Cola.h"
 #include "estructuras/Pila.h"
+#include "estructuras/ListaDoble.h"
 
 enum class EstadoJuego {
     MENU,
@@ -56,6 +57,8 @@ int main() {
     Pila pilaHold;
     bool yaIntercambio = false;
     
+    ListaDoble historial;
+    
     int puntaje = 0;
     
     float tiempoCaida = 0.0f;
@@ -66,6 +69,8 @@ int main() {
         if (estadoActual == EstadoJuego::MENU) {
             if (menu.Update()) {
                 estadoActual = EstadoJuego::JUEGO;
+                historial.vaciar();
+                historial.agregarEstado(tablero, puntaje);
             }
         } 
         else if (estadoActual == EstadoJuego::JUEGO) {
@@ -74,6 +79,7 @@ int main() {
             }
             if (IsKeyPressed(KEY_G)) {
                 estadoActual = EstadoJuego::GAME_OVER;
+                historial.irAlInicio();
             }
             
             // Logica de Caida y Movimiento
@@ -127,6 +133,8 @@ int main() {
                     else if (lineasLimpiadas == 3) puntaje += 500;
                     else if (lineasLimpiadas >= 4) puntaje += 800;
                     
+                    historial.agregarEstado(tablero, puntaje);
+                    
                     if (colaSiguientes.estaVacia()) {
                         LlenarBolsa(colaSiguientes);
                     }
@@ -135,6 +143,7 @@ int main() {
                     // Si al nacer ya hay colision, es Game Over
                     if (tablero.hayColision(piezaActual)) {
                         estadoActual = EstadoJuego::GAME_OVER;
+                        historial.irAlInicio();
                     }
                 }
                 tiempoCaida = 0.0f;
@@ -162,6 +171,7 @@ int main() {
                 yaIntercambio = false;
             } else if (accion == 2) {
                 estadoActual = EstadoJuego::REPLAY;
+                historial.irAlInicio();
             }
         }
         else if (estadoActual == EstadoJuego::REPLAY) {
@@ -174,6 +184,12 @@ int main() {
                 piezaActual = Pieza(colaSiguientes.desencolar());
                 while (!pilaHold.estaVacia()) pilaHold.desapilar();
                 yaIntercambio = false;
+            }
+            if (IsKeyPressed(KEY_LEFT)) {
+                historial.retroceder();
+            }
+            if (IsKeyPressed(KEY_RIGHT)) {
+                historial.avanzar();
             }
         }
         
@@ -194,8 +210,7 @@ int main() {
             pantallaGameOver.Draw(puntaje);
         }
         else if (estadoActual == EstadoJuego::REPLAY) {
-            ClearBackground(DARKGRAY);
-            DrawText("REPLAY...", 180, 190, 30, RAYWHITE);
+            pantallaJuego.DrawReplay(historial.getEstadoActual());
         }
         
         EndDrawing();

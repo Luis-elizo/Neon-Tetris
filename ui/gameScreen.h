@@ -6,6 +6,7 @@
 #include "../logica/Pieza.h"
 #include "../estructuras/Cola.h"
 #include "../estructuras/Pila.h"
+#include "../estructuras/ListaDoble.h"
 
 class GameScreen {
 private:
@@ -18,6 +19,7 @@ private:
 public:
     GameScreen();
     void Draw(const Tablero& tablero, const Pieza& piezaActual, int puntaje, const Cola& colaSiguientes, const Pila& pilaHold);
+    void DrawReplay(NodoHistorial* estadoReplay);
 };
 
 #endif
