@@ -157,3 +157,15 @@ int Tablero::limpiarLineas() {
     
     return lineasLimpiadas;
 }
+
+void Tablero::cargarEstado(int estado[20][10]) {
+    NodoFila* filaActual = cabeza;
+    for (int i = 0; i < filas && filaActual != nullptr; ++i) {
+        NodoCelda* celdaActual = filaActual->primerCelda;
+        for (int j = 0; j < columnas && celdaActual != nullptr; ++j) {
+            celdaActual->color = estado[i][j];
+            celdaActual = celdaActual->siguiente;
+        }
+        filaActual = filaActual->siguiente;
+    }
+}

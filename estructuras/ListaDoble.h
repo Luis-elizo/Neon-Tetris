@@ -40,6 +40,9 @@ public:
     bool avanzar();
     bool retroceder();
     
+    bool eliminarUltimo();
+    NodoHistorial* getFinal() const;
+    
     NodoHistorial* getEstadoActual() const;
     bool estaVacia() const;
 };

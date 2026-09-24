@@ -62,6 +62,27 @@ bool ListaDoble::retroceder() {
     return false;
 }
 
+bool ListaDoble::eliminarUltimo() {
+    if (inicio == nullptr || inicio == final) {
+        return false; 
+    }
+    
+    NodoHistorial* borrar = final;
+    final = final->anterior;
+    final->siguiente = nullptr;
+    
+    if (actual == borrar) {
+        actual = final;
+    }
+    
+    delete borrar;
+    return true;
+}
+
+NodoHistorial* ListaDoble::getFinal() const {
+    return final;
+}
+
 NodoHistorial* ListaDoble::getEstadoActual() const {
     return actual;
 }

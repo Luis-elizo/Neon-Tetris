@@ -103,6 +103,17 @@ int main() {
                 velocidadCaida = 0.5f;  // Velocidad normal
             }
             
+            if (IsKeyPressed(KEY_Z)) {
+                if (historial.eliminarUltimo()) {
+                    NodoHistorial* anterior = historial.getFinal();
+                    if (anterior != nullptr) {
+                        tablero.cargarEstado(anterior->estado);
+                        puntaje = anterior->puntaje;
+                        piezaActual.setPosicion(0, 4); 
+                    }
+                }
+            }
+            
             if (IsKeyPressed(KEY_RIGHT_SHIFT) && !yaIntercambio) {
                 TipoPieza tipoActual = piezaActual.getTipo();
                 if (pilaHold.estaVacia()) {

@@ -41,6 +41,8 @@ public:
     bool hayColision(const Pieza& pieza) const;
     void fijarPieza(const Pieza& pieza);
     int limpiarLineas();
+    
+    void cargarEstado(int estado[20][10]);
 };
 
 #endif

@@ -51,6 +51,10 @@ open=false
 path=estructuras\ListaDoble.cpp
 cursor=1:0
 open=false
+[source]
+path=estructuras\ColaPrioridad.cpp
+cursor=1:0
+open=false
 [header]
 path=ui\colors.h
 cursor=15:0
@@ -83,6 +87,10 @@ cursor=1:0
 open=false
 [header]
 path=estructuras\ListaDoble.h
+cursor=1:0
+open=false
+[header]
+path=estructuras\ColaPrioridad.h
 cursor=1:0
 open=false
 [config]
