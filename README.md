@@ -195,4 +195,5 @@ Como parte del análisis comparativo solicitado en las especificaciones del proy
 ## 8. Autoría y Control de Versiones
 
 - **Desarrollo:** Realizado de forma individual con historial de control de versiones incremental mediante **Git**.
+- **Registro de Versiones:** Consulte el archivo [`CHANGELOG.md`](CHANGELOG.md) para el detalle cronológico de cada hito y funcionalidad implementada.
 - **Herramientas de Asistencia:** Se utilizaron herramientas asistivas durante el desarrollo conforme a las directrices de la sección 4 y 6 de la especificación de cátedra, manteniendo el dominio y comprensión técnica total del código fuente para la defensa oral individual.
