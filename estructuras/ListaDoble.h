@@ -3,48 +3,50 @@
 
 #include "Tablero.h"
 
+// nodo para guardar una foto del tablero y el puntaje
 struct NodoHistorial {
-    int estado[20][10];
-    int puntaje;
+    int estado[20][10]; // copia de las celdas en este turno
+    int puntaje;        // puntaje en este turno
     
-    NodoHistorial* siguiente;
-    NodoHistorial* anterior;
+    NodoHistorial* siguiente; // turno siguiente
+    NodoHistorial* anterior;  // turno anterior
     
-    NodoHistorial(int p = 0) {
-        puntaje = p;
+    NodoHistorial(int puntajeInicial = 0) {
+        puntaje = puntajeInicial;
         siguiente = nullptr;
         anterior = nullptr;
         
-        for(int i = 0; i < 20; i++) {
-            for(int j = 0; j < 10; j++) {
-                estado[i][j] = 0;
+        for (int fila = 0; fila < 20; fila++) {
+            for (int columna = 0; columna < 10; columna++) {
+                estado[fila][columna] = 0;
             }
         }
     }
 };
 
+// lista doble para deshacer, rehacer y replay
 class ListaDoble {
 private:
-    NodoHistorial* inicio;
-    NodoHistorial* final;
-    NodoHistorial* actual;
+    NodoHistorial* inicio; // primer movimiento
+    NodoHistorial* final;  // ultimo movimiento
+    NodoHistorial* actual; // turno donde estamos parados
 
 public:
     ListaDoble();
     ~ListaDoble();
 
-    void agregarEstado(const Tablero& tablero, int puntaje);
-    void vaciar();
+    void agregarEstado(Tablero& tablero, int puntaje); // guarda un turno nuevo al final
+    void vaciar();                                     // borra todo el historial
 
-    void irAlInicio();
-    bool avanzar();
-    bool retroceder();
+    void irAlInicio();       // se pone en el primer turno para el replay
+    bool avanzar();          // pasa al turno siguiente
+    bool retroceder();       // vuelve al turno anterior
     
-    bool eliminarUltimo();
-    NodoHistorial* getFinal() const;
+    bool eliminarUltimo();   // quita el ultimo turno
+    NodoHistorial* getFinal();
     
-    NodoHistorial* getEstadoActual() const;
-    bool estaVacia() const;
+    NodoHistorial* getEstadoActual(); // devuelve el turno actual
+    bool estaVacia();                 // revisa si no tiene nada
 };
 
 #endif

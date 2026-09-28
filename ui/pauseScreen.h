@@ -3,18 +3,19 @@
 
 #include "raylib.h"
 
+// pantalla de pausa
 class PauseScreen {
 private:
-    Rectangle botonContinuar;
-    Rectangle botonMenu;
-    bool continuarResaltado;
-    bool menuResaltado;
+    Rectangle botonContinuar; // boton para seguir jugando
+    Rectangle botonMenu;      // boton para volver al menu
+    bool continuarResaltado;  // mouse sobre continuar
+    bool menuResaltado;       // mouse sobre menu
 
 public:
     PauseScreen();
 
-    int Update();
-    void Draw();
+    int Update(); // revisa clics o tecla esc
+    void Draw();  // dibuja el menu de pausa
 };
 
 #endif

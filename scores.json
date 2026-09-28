@@ -1,0 +1,9 @@
+[
+  { "nombre" : "LUIS" , "puntaje" : 2400 } ,
+  { "nombre" : "CARLOS" , "puntaje" : 5200 } ,
+  { "nombre" : "ANA" , "puntaje" : 1800 } ,
+  { "nombre" : "MARIA" , "puntaje" : 900 } ,
+  { "nombre" : "DEV" , "puntaje" : 4100 } ,
+  { "nombre" : "TESTER" , "puntaje" : 3000 } ,
+  { "nombre" : "SEM_RICO" , "puntaje" : 2900 }
+]

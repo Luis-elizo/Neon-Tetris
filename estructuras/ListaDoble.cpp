@@ -11,26 +11,41 @@ ListaDoble::~ListaDoble() {
 }
 
 void ListaDoble::vaciar() {
-    NodoHistorial* temp = inicio;
-    while (temp != nullptr) {
-        NodoHistorial* borrar = temp;
-        temp = temp->siguiente;
-        delete borrar;
+    // borra todos los turnos guardados
+    NodoHistorial* nodoActual = inicio;
+    while (nodoActual != nullptr) {
+        NodoHistorial* nodoABorrar = nodoActual;
+        nodoActual = nodoActual->siguiente;
+        delete nodoABorrar;
     }
     inicio = nullptr;
     final = nullptr;
     actual = nullptr;
 }
 
-void ListaDoble::agregarEstado(const Tablero& tablero, int puntaje) {
+void ListaDoble::agregarEstado(Tablero& tablero, int puntaje) {
+    // si habiamos deshecho jugadas y hacemos una nueva, borramos las que quedaron adelante
+    if (actual != nullptr && actual != final) {
+        NodoHistorial* nodoSiguiente = actual->siguiente;
+        while (nodoSiguiente != nullptr) {
+            NodoHistorial* nodoABorrar = nodoSiguiente;
+            nodoSiguiente = nodoSiguiente->siguiente;
+            delete nodoABorrar;
+        }
+        actual->siguiente = nullptr;
+        final = actual;
+    }
+
     NodoHistorial* nuevo = new NodoHistorial(puntaje);
     
-    for (int i = 0; i < 20; ++i) {
-        for (int j = 0; j < 10; ++j) {
-            nuevo->estado[i][j] = tablero.getCelda(i, j);
+    // copia las celdas del tablero al nuevo turno
+    for (int fila = 0; fila < 20; fila++) {
+        for (int columna = 0; columna < 10; columna++) {
+            nuevo->estado[fila][columna] = tablero.getCelda(fila, columna);
         }
     }
     
+    // lo engancha al final de la lista
     if (inicio == nullptr) {
         inicio = nuevo;
         final = nuevo;
@@ -39,14 +54,16 @@ void ListaDoble::agregarEstado(const Tablero& tablero, int puntaje) {
         nuevo->anterior = final;
         final = nuevo;
     }
-    actual = final;
+    actual = final; // se para en el turno nuevo
 }
 
 void ListaDoble::irAlInicio() {
+    // se va al primer turno
     actual = inicio;
 }
 
 bool ListaDoble::avanzar() {
+    // pasa al turno siguiente
     if (actual != nullptr && actual->siguiente != nullptr) {
         actual = actual->siguiente;
         return true;
@@ -55,6 +72,7 @@ bool ListaDoble::avanzar() {
 }
 
 bool ListaDoble::retroceder() {
+    // vuelve al turno anterior
     if (actual != nullptr && actual->anterior != nullptr) {
         actual = actual->anterior;
         return true;
@@ -63,30 +81,31 @@ bool ListaDoble::retroceder() {
 }
 
 bool ListaDoble::eliminarUltimo() {
+    // borra el ultimo turno si hay mas de uno
     if (inicio == nullptr || inicio == final) {
         return false; 
     }
     
-    NodoHistorial* borrar = final;
+    NodoHistorial* nodoABorrar = final;
     final = final->anterior;
     final->siguiente = nullptr;
     
-    if (actual == borrar) {
+    if (actual == nodoABorrar) {
         actual = final;
     }
     
-    delete borrar;
+    delete nodoABorrar;
     return true;
 }
 
-NodoHistorial* ListaDoble::getFinal() const {
+NodoHistorial* ListaDoble::getFinal() {
     return final;
 }
 
-NodoHistorial* ListaDoble::getEstadoActual() const {
+NodoHistorial* ListaDoble::getEstadoActual() {
     return actual;
 }
 
-bool ListaDoble::estaVacia() const {
+bool ListaDoble::estaVacia() {
     return inicio == nullptr;
 }

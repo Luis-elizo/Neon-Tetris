@@ -1,11 +1,11 @@
 #include "Pieza.h"
 
-Pieza::Pieza(TipoPieza t) {
-    tipo = t;
+Pieza::Pieza(TipoPieza tipoPieza) {
+    tipo = tipoPieza;
     rotacionActual = 0;
     filaOriginal = 0;
     colOriginal = 3; 
-    colorId = static_cast<int>(t) + 1;
+    colorId = static_cast<int>(tipoPieza) + 1;
 
     inicializarForma();
 }
@@ -20,9 +20,9 @@ void Pieza::inicializarForma() {
             break;
             
         case TipoPieza::O:
-            for (int i = 0; i < 4; ++i) {
-                orientaciones[i][0] = {0, 0}; orientaciones[i][1] = {0, 1}; 
-                orientaciones[i][2] = {1, 0}; orientaciones[i][3] = {1, 1};
+            for (int orientacion = 0; orientacion < 4; orientacion++) {
+                orientaciones[orientacion][0] = {0, 0}; orientaciones[orientacion][1] = {0, 1}; 
+                orientaciones[orientacion][2] = {1, 0}; orientaciones[orientacion][3] = {1, 1};
             }
             break;
             
@@ -63,30 +63,35 @@ void Pieza::inicializarForma() {
     }
 }
 
-void Pieza::mover(int dFila, int dCol) {
-    filaOriginal += dFila;
-    colOriginal += dCol;
+void Pieza::mover(int deltaFila, int deltaColumna) {
+    // mueve la posicion de la pieza
+    filaOriginal += deltaFila;
+    colOriginal += deltaColumna;
 }
 
 void Pieza::rotar() {
+    // cambia al siguiente giro
     rotacionActual = (rotacionActual + 1) % 4;
 }
 
 void Pieza::deshacerRotacion() {
+    // si choco, vuelve al giro de antes
     rotacionActual = (rotacionActual - 1 + 4) % 4;
 }
 
-TipoPieza Pieza::getTipo() const { return tipo; }
-int Pieza::getFilaOriginal() const { return filaOriginal; }
-int Pieza::getColOriginal() const { return colOriginal; }
-int Pieza::getColorId() const { return colorId; }
+TipoPieza Pieza::getTipo() { return tipo; }
+int Pieza::getFilaOriginal() { return filaOriginal; }
+int Pieza::getColOriginal() { return colOriginal; }
+int Pieza::getColorId() { return colorId; }
 
-void Pieza::setPosicion(int fila, int col) {
-    filaOriginal = fila;
-    colOriginal = col;
+void Pieza::setPosicion(int nuevaFila, int nuevaColumna) {
+    // cambia las coordenadas
+    filaOriginal = nuevaFila;
+    colOriginal = nuevaColumna;
 }
 
-Posicion Pieza::getPosicionBloque(int bloqueIdx) const {
-    Posicion rel = orientaciones[rotacionActual][bloqueIdx];
-    return { filaOriginal + rel.fila, colOriginal + rel.col };
+Posicion Pieza::getPosicionBloque(int bloqueIdx) {
+    // calcula donde queda el bloque en el tablero
+    Posicion relativa = orientaciones[rotacionActual][bloqueIdx];
+    return { filaOriginal + relativa.fila, colOriginal + relativa.col };
 }

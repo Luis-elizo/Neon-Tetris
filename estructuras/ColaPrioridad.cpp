@@ -9,26 +9,28 @@ ColaPrioridad::~ColaPrioridad() {
 }
 
 void ColaPrioridad::vaciar() {
+    // borra todos los eventos que queden
     while (!estaVacia()) {
-        NodoEvento* aux = frente;
+        NodoEvento* nodoAEliminar = frente;
         frente = frente->siguiente;
-        delete aux;
+        delete nodoAEliminar;
     }
 }
 
-void ColaPrioridad::encolar(TipoEvento ev, float tiempo, std::string msg) {
-    NodoEvento* nuevo = new NodoEvento(ev, tiempo, msg);
+void ColaPrioridad::encolar(TipoEvento tipoEvento, float tiempo, std::string mensajeEvento) {
+    NodoEvento* nuevo = new NodoEvento(tipoEvento, tiempo, mensajeEvento);
     
-    // Si esta vacia o el nuevo tiene mas prioridad (menor tiempo) que el frente
+    // si no hay nada o toca antes que el primero, lo pone al frente
     if (estaVacia() || tiempo < frente->tiempoEjecucion) {
         nuevo->siguiente = frente;
         frente = nuevo;
     } else {
-        // Buscar su posicion correcta para mantenerla ordenada
+        // busca donde meterlo en orden de tiempo
         NodoEvento* actual = frente;
         while (actual->siguiente != nullptr && actual->siguiente->tiempoEjecucion <= tiempo) {
             actual = actual->siguiente;
         }
+        // lo conecta en el medio
         nuevo->siguiente = actual->siguiente;
         actual->siguiente = nuevo;
     }
@@ -39,19 +41,20 @@ NodoEvento ColaPrioridad::desencolar() {
         return NodoEvento(TipoEvento::BONUS_PUNTAJE, -1.0f, "");
     }
     
-    NodoEvento* aux = frente;
-    NodoEvento copia = *aux; // Hacemos copia de los datos
+    // saca el evento que estaba de primero
+    NodoEvento* nodoAEliminar = frente;
+    NodoEvento copia = *nodoAEliminar;
     frente = frente->siguiente;
-    delete aux;
+    delete nodoAEliminar;
     
-    return copia; // Retornamos por valor
+    return copia;
 }
 
-float ColaPrioridad::verTiempoFrente() const {
+float ColaPrioridad::verTiempoFrente() {
     if (estaVacia()) return -1.0f;
     return frente->tiempoEjecucion;
 }
 
-bool ColaPrioridad::estaVacia() const {
+bool ColaPrioridad::estaVacia() {
     return frente == nullptr;
 }
